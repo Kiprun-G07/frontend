@@ -1,15 +1,74 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "Roboto Mono", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-white dark:bg-linear-65 from-purple-500 to-pink-500;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+/* Simple container utility for non-tailwind markup (keeps page centered) */
+.container {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+header.border-b {
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.nav-link {
+  color: #374151; /* gray-700 */
+}
+
+.nav-link:hover {
+  color: #1f2937; /* gray-800 */
+}
+
+.drdown {
+  background-color: transparent;
+  border-color: #d1d5db; /* gray-300 */
+  color: #374151; /* gray-700 */
+  appearance: none;
+}
+
+select {
+  appearance: base-select;
+  /* Add your custom styles here */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: sans-serif;
+  color: #333;
+}
+
+select::picker(select) {
+  appearance: base-select;
+  /* Styles for the dropdown/picker itself */
+}
+
+select::picker-icon {
+  /* Styles for the dropdown arrow icon */
+  color: #666;
+}
+
+select:checked {
+  /* Styles for the selected option */
+  background-color: #e0e0e0;
+}
+
+select::checkmark {
+  /* Styles for the checkmark inside selected options */
+  color: green;
 }

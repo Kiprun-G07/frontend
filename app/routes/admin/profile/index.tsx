@@ -1,0 +1,148 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { apiFetch, fetchCurrentUser, type User } from "../../../lib/auth";
+
+export function meta() {
+  return [{ title: "Admin Profile" }];
+}
+
+type AdminProfile = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  is_admin: boolean;
+};
+
+export default function AdminProfile() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [profile, setProfile] = useState<AdminProfile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const currentAdmin = await fetchCurrentUser();
+        if (!mounted) return;
+        
+        if (!currentAdmin || !currentAdmin.is_admin) {
+          navigate('/admin/login');
+          return;
+        }
+
+        // Load own admin profile
+        const profileRes = await apiFetch(`/api/admin/profile/${currentAdmin.id}`);
+        const profileData = await profileRes.json();
+        
+        if (!mounted) return;
+        setProfile(profileData);
+      } catch (err: any) {
+        if (!mounted) return;
+        setError(err?.message || 'Failed to load admin profile');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    load();
+    return () => { mounted = false };
+  }, [navigate]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProfile(prev => prev ? { ...prev, [name]: value } : null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile) return;
+    
+    setError(null);
+    setSaving(true);
+    
+    try {
+      await apiFetch(`/api/admin/profile/${profile.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      
+      // Refresh admin data and stay on page
+      await fetchCurrentUser();
+    } catch (err: any) {
+      setError(err?.message || 'Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <main className="p-6">Loading...</main>;
+  if (error) return <main className="p-6 text-red-600">{error}</main>;
+  if (!profile) return <main className="p-6">Profile not found.</main>;
+
+  return (
+    <main className="max-w-2xl mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl">My Admin Profile</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block mb-1">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            value={profile.name}
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block mb-1">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            value={profile.email}
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div className="text-sm text-gray-600">
+          Role: {profile.role}
+        </div>
+
+        {error && (
+          <div className="text-red-600" role="alert">
+            {error}
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-60"
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => navigate('/admin/dashboard')}
+            className="px-4 py-2 bg-gray-100 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </main>
+  );
+}
