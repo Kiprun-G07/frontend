@@ -28,7 +28,7 @@ export default function Home() {
     });
   }, []);
 
-  if (user){
+  if (user && events.length > 0){
     return (
       <main className="px-15 py-12">
         {/* <section className="max-w-3xl mx-auto">
