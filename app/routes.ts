@@ -7,7 +7,8 @@ export default [
         route("login", "routes/user/login.tsx"),
         route("register", "routes/user/register.tsx"),
         route("profile", "routes/user/profile.tsx"),
-
+        route("events", "routes/events.tsx"),
+        route("about", "routes/about.tsx"),
     
     // Admin routes
     route("admin", "routes/admin.tsx", [

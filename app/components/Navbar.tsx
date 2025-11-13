@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router";
 import { logoutServer } from "../lib/auth";
 import { useAuth } from "../lib/auth-context";
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const { user, loading, setUser } = useAuth();
@@ -14,14 +15,18 @@ export default function Navbar() {
   }
 
   return (
-    <header className="bg-white border-b text-gray-800">
+    <header className="bg-white bg-opacity-25 border-b text-gray-800">
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to="/" className="font-semibold text-lg">GPS</Link>
+          <Link to="/" className="font-semibold text-lg">
+            <img src={logo} alt="GPS Logo" className="h-8 w-full inline-block mr-2" />
+          </Link>
         </div>
 
         <div className="flex items-center gap-4">
           <Link to="/" className="text-sm">Home</Link>
+          <Link to="/events" className="text-sm">Events</Link>
+          <Link to="/about" className="text-sm">About Us</Link>
           {!loading && !user && (
             <>
               <Link to="/login" className="text-sm">Sign in</Link>

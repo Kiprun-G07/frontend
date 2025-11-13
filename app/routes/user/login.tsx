@@ -36,8 +36,8 @@ export default function UserLogin() {
       // Update user context and verify it's not an admin
       await updateUser();
       
-      // If we got a user back and they're not an admin, proceed
-      if (result.user && !result.user.is_admin) {
+      // If we got a user back and they're not an admin, proceed ** && !result.user.is_admin
+      if (result.user) {
         navigate("/");
       } else {
         throw new Error("Invalid credentials");

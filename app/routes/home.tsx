@@ -1,5 +1,8 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
+import { useAuth } from "../lib/auth-context";
+import { apiFetch } from "../lib/auth";
+import dayjs from "dayjs"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,18 +11,88 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 import { Link } from "react-router";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <main className="px-15 py-12">
-      <section className="max-w-3xl mx-auto">
-        <Welcome />
-        <div className="mt-8">
-          <Link to="/login" className="inline-block bg-blue-600 text-white px-4 py-2 rounded">
-            Sign in
-          </Link>
+  const { user, loading, setUser } = useAuth();
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    apiFetch('/api/events').then(async (res) => {
+      if (res.ok) {
+        const events = await res.json();
+        setEvents(events);
+      }
+    }).catch((err) => {
+      console.error('Failed to fetch user profile', err);
+    });
+  }, []);
+
+  if (user){
+    return (
+      <main className="px-15 py-12">
+        {/* <section className="max-w-3xl mx-auto">
+          
+          <div className="mt-8">
+            Logged in as {user.name ?? user.email}
+          </div>
+        </section> */}
+        <div className="main-content flex flex-row items-top gap-5 justify-center pb-12">
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[0].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[0].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[0].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <div className="font-medium">6 hours</div>
+          </div>
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[1].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[1].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[1].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <div className="font-medium">6 hours</div>
+          </div>
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[2].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[2].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[2].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <div className="font-medium">6 hours</div>
+          </div>
+
         </div>
-      </section>
-    </main>
-  );
+      </main>
+    );
+  } else {
+    return (
+      <main className="px-15 py-12">
+        <section className="max-w-3xl mx-auto">
+          <Welcome />
+          <div className="mt-8">
+            <Link to="/login" className="inline-block bg-blue-600 text-white px-4 py-2 rounded">
+              Sign in
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
+  }
 }

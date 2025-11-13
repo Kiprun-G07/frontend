@@ -7,10 +7,16 @@
 
 html,
 body {
-  @apply bg-white dark:bg-linear-65 from-purple-500 to-pink-500;
+  /*@apply bg-white dark:bg-linear-65 from-purple-500 to-pink-500;
+*/
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+  @apply bg-linear-65 from-purple-300 via-yellow-100 to-pink-400;
+
+  min-height: 100vh;
+
+  @apply bg-white;
+  @media (prefers-color-scheme: light) {
+    color-scheme: light;
   }
 }
 
@@ -71,4 +77,13 @@ select:checked {
 select::checkmark {
   /* Styles for the checkmark inside selected options */
   color: green;
+}
+
+.content-card {
+  background-color: rgba(255,255,255, .15);
+  padding: 3rem 1.5rem 3rem 1.5rem;
+  border-radius: 1.5rem;
+
+  @apply shadow-lg;
+  @apply inset-shadow-sm inset-shadow-gray-500/50;
 }

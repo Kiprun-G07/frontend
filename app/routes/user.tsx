@@ -22,8 +22,8 @@ export default function UserLayout() {
   }
 
   // Redirect to login if not authenticated
-  if (!isAuthenticated && window.location.pathname !== '/user/login' && window.location.pathname !== '/user/register') {
-    return <Navigate to="/user/login" replace />;
+  if (!isAuthenticated && window.location.pathname !== '/login' && window.location.pathname !== '/user/register') {
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

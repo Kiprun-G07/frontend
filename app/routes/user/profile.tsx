@@ -29,7 +29,7 @@ export default function UserProfileEditor() {
         if (!mounted) return;
         
         if (!user) {
-          navigate('/user/login');
+          navigate('/login');
           return;
         }
 
