@@ -98,8 +98,15 @@ export default function UserLogin() {
 
         <p className="text-center">
           Don't have an account?{" "}
-          <Link to="/user/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-blue-600 hover:underline">
             Register here
+          </Link>
+        </p>
+
+        <p className="text-center">
+          Forgot your password?{" "}
+          <Link to="/forgotpassword" className="text-blue-600 hover:underline">
+            Reset it here
           </Link>
         </p>
       </form>

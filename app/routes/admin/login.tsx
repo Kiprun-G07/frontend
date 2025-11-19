@@ -8,7 +8,7 @@ export function meta() {
 }
 
 export default function AdminLogin() {
-  const { updateUser } = useAuth();
+  // const { updateUser } = useAuth(true);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,11 +34,12 @@ export default function AdminLogin() {
       const result = await login(formData.email, formData.password, 'admin');
       
       // Update user context and verify admin status
-      await updateUser();
+      // await updateUser();
       
       // Verify that the user is an admin
       
         navigate("/admin/dashboard");
+
      
     } catch (err: any) {
       setError(err?.message || "Login failed");
@@ -93,6 +94,13 @@ export default function AdminLogin() {
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>
+
+        <p className="text-center">
+          Forgot your password?{" "}
+          <Link to="/admin/forgotpassword" className="text-blue-600 hover:underline">
+            Reset it here
+          </Link>
+        </p>
       </form>
     </main>
   );

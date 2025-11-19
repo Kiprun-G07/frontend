@@ -34,8 +34,8 @@ export default function AdminPage() {
   if (!(user.is_admin || user.role === 'admin'))
     return (
       <main className="p-6">
-        <h1 className="text-2xl mb-4">Access denied</h1>
-        <p>You do not have permission to view this page.</p>
+        <h1 className="text-2xl mb-4">Admin Dashboard</h1>
+        <p></p>
       </main>
     );
 

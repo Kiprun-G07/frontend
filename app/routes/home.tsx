@@ -49,7 +49,7 @@ export default function Home() {
 
             </div>
 
-            <div className="font-medium">6 hours</div>
+            <Link to={`/event/${events[0].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
           <div className="content-card h-full  flex-1 flex-grow">
             <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>

@@ -11,12 +11,14 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+let admin = false;
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const updateUser = async () => {
-    const userData = await fetchCurrentUser();
+    const userData = await fetchCurrentUser(admin);
     setUser(userData);
   };
 
@@ -35,8 +37,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useAuth() {
+export function useAuth(setAsAdmin?: boolean) {
   const context = useContext(AuthContext);
+  admin = setAsAdmin ?? admin;
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

@@ -69,12 +69,29 @@ export default function Register() {
       }
 
       // Optionally get token from response if your API returns it
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem("auth_token", data.token);
-      }
+      const data = await res.json().then(async (data) => {
+        const verify = await fetch(`${import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000/api'}/email/verify/request`, {
+          method: "POST",
+          headers: { 
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({ email: formData.email }),
+        });
+
+        if (!verify.ok) {
+          const verifyData = await verify.json().catch(() => ({ message: verify.statusText }));
+          throw new Error(verifyData.message || "Failed to send verification email");
+        }
+        
+        if (data.token) {
+          localStorage.setItem("auth_token", data.token);
+        }
+      });
       
-      navigate("/");
+      
+      navigate("/accountsuccess");
     } catch (err: any) {
       setError(err?.message || "Registration failed");
     } finally {

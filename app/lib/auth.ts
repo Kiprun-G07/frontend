@@ -149,13 +149,17 @@ export function isRegularUser(user: User | null): boolean {
 
 export async function fetchCurrentUser(admin?: boolean): Promise<User | null> {
   try {
+      
+    console.log("Fetching current user, admin =", admin);
         // First check if we have stored user data
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
       // Determine the correct endpoint based on user type
       const endpoint = admin ? '/api/admin/profile' : '/api/user';
-      
+
+      // const endpoint ='/api/admin/profile';
+
       try {
         // Verify the stored data is still valid
         const res = await apiFetch(endpoint);
