@@ -87,3 +87,13 @@ select::checkmark {
   @apply shadow-lg;
   @apply inset-shadow-sm inset-shadow-gray-500/50;
 }
+
+.item-card{
+  width: 100%;
+}
+.item-card:hover{
+  @apply scale-105;
+  @apply transition-transform;
+  @apply duration-300;
+  @apply ease-in-out;
+}

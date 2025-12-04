@@ -18,9 +18,12 @@ export default [
     // Admin routes
     route("admin", "routes/admin.tsx", [
         route("login", "routes/admin/login.tsx"),
+        route("events", "routes/admin/events.tsx"),
+        route("event/:id", "routes/admin/event.tsx"),
+        route("newevent", "routes/admin/newevent.tsx"),
         route("dashboard", "routes/admin/dashboard.tsx"),
         route("profile", "routes/admin/profile/index.tsx"),  // Self profile
-        route("profile/$id", "routes/admin/profile/edit.tsx"),  // Edit other admin\
+        route("profile/:id", "routes/admin/profile/edit.tsx"),  // Edit other admin\
         route("forgotpassword", "routes/admin/forgotpassword.tsx"),
         route("resetpassword", "routes/admin/resetpassword.tsx"),
     ]),

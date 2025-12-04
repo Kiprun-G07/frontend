@@ -13,6 +13,9 @@ export default function Event() {
     const navigate = useNavigate();
     const [showJoinMessage, setShowJoinMessage] = useState(false);
     const [showCrewJoinMessage, setShowCrewJoinMessage] = useState(false);
+    const [joinedEvent, setJoinedEvent] = useState<boolean>(false);
+
+    const [loading, setLoading] = useState(true);
 
     const [crewRole, setCrewRole] = useState("");
 
@@ -43,6 +46,7 @@ export default function Event() {
 
     useEffect(() => {
         let mounted = true;
+        setLoading(true);
         async function load() {
             try {
                 const res = await apiFetch(`/api/events/${id}`);
@@ -54,6 +58,13 @@ export default function Event() {
                 const userData = await userRes.json();
                 if (!mounted) return;
                 setUser(userData);
+
+                const joinedRes = await apiFetch(`/api/events/${id}/joined`);
+                const joinedData = await joinedRes.json();
+                if (!mounted) return;
+                setJoinedEvent(joinedData.is_either);
+
+                setLoading(false);
 
             } catch (err) {
                 console.error('Failed to load event', err);
@@ -72,38 +83,44 @@ export default function Event() {
             <p className="text-sm text-gray-500">{dayjs(event.event_date).format('ddd, MMM D, YYYY')}</p>
             <p className="text-sm text-gray-500"><i>at</i> {event.event_location}</p>
 
-            <form className="mt-6" onSubmit={handleSubmit}>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:cursor-pointer">Join Event</button>  
-            </form>
+            {!loading && joinedEvent  ? (
+                <p className="mt-4 text-green-600">You have already joined this event, {user?.name || user?.email}!</p>
+            ) : (
+            <div>
+                <form className="mt-6" onSubmit={handleSubmit}>
+                    <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:cursor-pointer">Join Event</button>  
+                </form>
 
-            {showJoinMessage && (
-                <p className="mt-4 text-green-600">You have successfully joined the event, {user?.name || user?.email}!</p>
-            )}
-
-            <form className="mt-6" onSubmit={handleJoinAsCrewMember}>
-                <div className="mb-6">
-                <label htmlFor="faculty" className="block mb-1">Or, join as a crew member</label>
-                <select
-                    id="faculty"
-                    name="faculty"
-                    required
-                    value={crewRole}
-                    onChange={(e) => setCrewRole(e.target.value)}
-                    className="w-full border rounded px-3 py-2"
-                >
-                    <option value="">Select Crew Role</option>
-                    <option value="Technical">Technical</option>
-                    <option value="Protocol">Protocol</option>
-                    <option value="Special Tasks">Special Tasks</option>
-                    <option value="Multimedia">Multimedia</option>
-                </select>
-                </div>
-                <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:cursor-pointer">Join as Crew Member</button>
-
-                {showCrewJoinMessage && (
-                    <p className="mt-4 text-green-600">You have successfully joined the event as a crew member!</p>
+                {showJoinMessage && (
+                    <p className="mt-4 text-green-600">You have successfully joined the event, {user?.name || user?.email}!</p>
                 )}
-            </form>
+
+                <form className="mt-6" onSubmit={handleJoinAsCrewMember}>
+                    <div className="mb-6">
+                    <label htmlFor="faculty" className="block mb-1">Or, join as a crew member</label>
+                    <select
+                        id="faculty"
+                        name="faculty"
+                        required
+                        value={crewRole}
+                        onChange={(e) => setCrewRole(e.target.value)}
+                        className="w-full border rounded px-3 py-2"
+                    >
+                        <option value="">Select Crew Role</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Protocol">Protocol</option>
+                        <option value="Special Tasks">Special Tasks</option>
+                        <option value="Multimedia">Multimedia</option>
+                    </select>
+                    </div>
+                    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:cursor-pointer">Join as Crew Member</button>
+
+                    {showCrewJoinMessage && (
+                        <p className="mt-4 text-green-600">You have successfully joined the event as a crew member!</p>
+                    )}
+                </form>
+            </div>
+            )}
         </main>
     );
 }
