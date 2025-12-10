@@ -6,6 +6,21 @@ export function meta() {
   return [{ title: "Admin" }];
 }
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  matriculation_number: string;
+  faculty: string;
+};
+
+type EventAttendee = {
+  id: number;
+  event_name: string;
+  name: string;
+  email: string;
+};
+
 export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
@@ -29,19 +44,11 @@ export default function AdminPage() {
     return () => { mounted = false };
   }, [navigate]);
 
-  if (loading) return <main className="p-6">Loading...</main>;
-  if (!user) return <main className="p-6">Redirecting to login...</main>;
-  if (!(user.is_admin || user.role === 'admin'))
-    return (
-      <main className="p-6">
-        <h1 className="text-2xl mb-4">Admin Dashboard</h1>
-        <p></p>
-      </main>
-    );
+  
 
-  const [tab, setTab] = useState<'users' | 'logs'>('users');
-  const [users, setUsers] = useState<any[]>([]);
-  const [logs, setLogs] = useState<any[]>([]);
+  const [tab, setTab] = useState<'users' | 'events'>('users');
+  const [users, setUsers] = useState<User[]>([]);
+  const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([]);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -58,12 +65,12 @@ export default function AdminPage() {
         }
       } else {
         try {
-          const res = await apiFetch('/api/admin/audit');
+          const res = await apiFetch('/api/admin/eventattendees');
           const d = await res.json().catch(() => []);
           if (!mounted) return;
-          setLogs(Array.isArray(d) ? d : []);
+          setEventAttendees(Array.isArray(d) ? d : []);
         } catch (err) {
-          console.error('Failed to load logs', err);
+          console.error('Failed to load event attendees', err);
         }
       }
     }
@@ -71,26 +78,29 @@ export default function AdminPage() {
     return () => { mounted = false };
   }, [tab]);
 
-  async function toggleActive(u: any) {
-    if (!u || !u.id) return;
-    const action = u.active ? 'deactivate' : 'activate';
-    if (!confirm(`Are you sure you want to ${action} ${u.email || u.name}?`)) return;
-    setBusy(true);
-    try {
-      // Try a conventional endpoint; backend may vary — adapt as needed
-      const res = await apiFetch(`/api/admin/users/${u.id}/${action}`, { method: 'POST' });
-      if (res.ok) {
-        setUsers(prev => prev.map(p => p.id === u.id ? { ...p, active: !p.active } : p));
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Failed to update user');
-    } finally {
-      setBusy(false);
-    }
-  }
+  // async function toggleActive(u: any) {
+  //   if (!u || !u.id) return;
+  //   const action = u.active ? 'deactivate' : 'activate';
+  //   if (!confirm(`Are you sure you want to ${action} ${u.email || u.name}?`)) return;
+  //   setBusy(true);
+  //   try {
+  //     // Try a conventional endpoint; backend may vary — adapt as needed
+  //     const res = await apiFetch(`/api/admin/users/${u.id}/${action}`, { method: 'POST' });
+  //     if (res.ok) {
+  //       setUsers(prev => prev.map(p => p.id === u.id ? { ...p, active: !p.active } : p));
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert('Failed to update user');
+  //   } finally {
+  //     setBusy(false);
+  //   }
+  // }
 
-  return (
+  if (loading) return <main className="p-6">Loading...</main>;
+  if (!user) return <main className="p-6">Redirecting to login...</main>;
+  if (!(user.is_admin || user.role === 'admin'))
+    return (
     <main className="p-6">
       <h1 className="text-2xl mb-4">Admin Dashboard</h1>
       <p>Welcome back, {user.name ?? user.email} — admin tools below.</p>
@@ -98,7 +108,7 @@ export default function AdminPage() {
       <div className="mt-6">
         <nav className="flex gap-3 mb-4">
           <button className={`px-3 py-1 rounded ${tab==='users' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('users')}>Users</button>
-          <button className={`px-3 py-1 rounded ${tab==='logs' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('logs')}>Audit Logs</button>
+          <button className={`px-3 py-1 rounded ${tab==='events' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('events')}>Event Attendees</button>
         </nav>
 
         {tab === 'users' && (
@@ -113,8 +123,8 @@ export default function AdminPage() {
                     <th className="text-left p-2">Email</th>
                     <th className="text-left p-2">Faculty</th>
                     <th className="text-left p-2">Matric</th>
-                    <th className="text-left p-2">Active</th>
-                    <th className="text-left p-2">Actions</th>
+                    {/* <th className="text-left p-2">Active</th>
+                    <th className="text-left p-2">Actions</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -124,13 +134,13 @@ export default function AdminPage() {
                       <td className="p-2">{u.name}</td>
                       <td className="p-2">{u.email}</td>
                       <td className="p-2">{u.faculty}</td>
-                      <td className="p-2">{u.matriculationId ?? u.matric}</td>
-                      <td className="p-2">{u.active ? 'Yes' : 'No'}</td>
+                      <td className="p-2">{u.matriculation_number}</td>
+                      {/* <td className="p-2">{u.active ? 'Yes' : 'No'}</td>
                       <td className="p-2">
                         <button disabled={busy} onClick={() => toggleActive(u)} className="text-sm px-2 py-1 bg-gray-100 rounded">
                           {u.active ? 'Deactivate' : 'Activate'}
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -140,20 +150,31 @@ export default function AdminPage() {
           </section>
         )}
 
-        {tab === 'logs' && (
+        {tab === 'events' && (
           <section>
-            <h2 className="text-lg mb-2">Audit Logs</h2>
+            <h2 className="text-lg mb-2">Event Attendees</h2>
             <div className="overflow-x-auto border rounded p-2">
-              {logs.length === 0 && <div>No logs found.</div>}
-              <ul className="text-sm">
-                {logs.map((l, idx) => (
-                  <li key={idx} className="mb-2">
-                    <div className="text-xs text-gray-500">{new Date(l.created_at || l.timestamp || Date.now()).toLocaleString()}</div>
-                    <div>{l.event_type || l.action}: {l.event_data ? JSON.stringify(l.event_data) : l.message}</div>
-                    <div className="text-xs text-gray-500">{l.ip ?? l.ip_address} {l.user_agent ? `• ${l.user_agent}` : ''}</div>
-                  </li>
-                ))}
-              </ul>
+              {eventAttendees.length === 0 && <div>No event attendees found.</div>}
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-2">Event ID</th>
+                    <th className="text-left p-2">Event Name</th>
+                    <th className="text-left p-2">User Name</th>
+                    <th className="text-left p-2">User Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {eventAttendees.map((ea, index) => (
+                    <tr key={index} className="border-t">
+                      <td className="p-2">{ea.id}</td>
+                      <td className="p-2">{ea.event_name}</td>
+                      <td className="p-2">{ea.name}</td>
+                      <td className="p-2">{ea.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}

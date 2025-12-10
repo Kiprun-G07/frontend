@@ -13,6 +13,7 @@ import "./app.css";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./lib/auth-context";
 import AdminNavbar from "./components/AdminNavbar";
+import Chatbot from "./components/Chatbot";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -53,6 +54,7 @@ export default function App() {
 
       {location.pathname.startsWith('/admin') ? <AdminNavbar /> : <Navbar />}
       <Outlet />
+      <Chatbot />
     </AuthProvider>
   );
 }
