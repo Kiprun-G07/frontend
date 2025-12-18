@@ -26,6 +26,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <Link to="/" className="text-sm">Home</Link>
           <Link to="/events" className="text-sm">Events</Link>
+          <Link to="/forum" className="text-sm">Forum</Link>
           <Link to="/about" className="text-sm">About Us</Link>
           {!loading && !user && (
             <>

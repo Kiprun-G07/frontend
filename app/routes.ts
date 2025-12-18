@@ -9,6 +9,8 @@ export default [
         route("register", "routes/user/register.tsx"),
         route("profile", "routes/user/profile.tsx"),
         route("events", "routes/events.tsx"),
+        route("forum", "routes/forum.tsx"),
+        route("forum/post/:id", "routes/forumpost.tsx"),
         route("about", "routes/about.tsx"),
         route("accountsuccess", "routes/user/accountsuccess.tsx"),
         route("verifysuccess", "routes/user/verifysuccess.tsx"),

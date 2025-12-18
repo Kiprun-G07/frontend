@@ -21,6 +21,17 @@ type EventAttendee = {
   email: string;
 };
 
+type ForumPost = {
+  id: number;
+  title: string;
+  content: string;
+  user: {
+    id: number;
+    name: string;
+  };
+  created_at: Date;
+};
+
 export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
@@ -46,10 +57,11 @@ export default function AdminPage() {
 
   
 
-  const [tab, setTab] = useState<'users' | 'events'>('users');
+  const [tab, setTab] = useState<'users' | 'events' | 'forums'>('users');
   const [users, setUsers] = useState<User[]>([]);
   const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([]);
   const [busy, setBusy] = useState(false);
+  const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -63,7 +75,7 @@ export default function AdminPage() {
         } catch (err) {
           console.error('Failed to load users', err);
         }
-      } else {
+      } else if (tab === 'events') {
         try {
           const res = await apiFetch('/api/admin/eventattendees');
           const d = await res.json().catch(() => []);
@@ -72,11 +84,32 @@ export default function AdminPage() {
         } catch (err) {
           console.error('Failed to load event attendees', err);
         }
+      } else if (tab === 'forums') {
+        try {
+          const res = await apiFetch('/api/forum/posts');
+          const d = await res.json().catch(() => []);
+          if (!mounted) return;
+          setPosts(Array.isArray(d.posts) ? d.posts : []);
+        } catch (err) {
+          console.error('Failed to load forum posts', err);
+        }
       }
     }
     load();
     return () => { mounted = false };
   }, [tab]);
+
+  function deletePost(id: number) {
+    apiFetch(`/api/forum/posts/${id}`, {
+      method: "DELETE"
+    }).then(async (res) => {
+      if (res.ok) {
+        setPosts(prevPosts => prevPosts.filter(p => p.id !== id));
+      } else {
+        console.error('Failed to delete forum post');
+      }
+    });
+  }
 
   // async function toggleActive(u: any) {
   //   if (!u || !u.id) return;
@@ -109,6 +142,7 @@ export default function AdminPage() {
         <nav className="flex gap-3 mb-4">
           <button className={`px-3 py-1 rounded ${tab==='users' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('users')}>Users</button>
           <button className={`px-3 py-1 rounded ${tab==='events' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('events')}>Event Attendees</button>
+          <button className={`px-3 py-1 rounded ${tab==='forums' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`} onClick={() => setTab('forums')}>Forum Posts</button>
         </nav>
 
         {tab === 'users' && (
@@ -171,6 +205,49 @@ export default function AdminPage() {
                       <td className="p-2">{ea.event_name}</td>
                       <td className="p-2">{ea.name}</td>
                       <td className="p-2">{ea.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {tab === 'forums' && (
+          <section>
+            <h2 className="text-lg mb-2">Forum Posts</h2>
+            <div className="overflow-x-auto border rounded p-2">
+              {posts.length === 0 && <div>No forum posts found.</div>}
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-2">ID</th>
+                    <th className="text-left p-2">Title</th>
+                    <th className="text-left p-2">Content</th>
+                    <th className="text-left p-2">User</th>
+                    <th className="text-left p-2">Created At</th>
+                    <th className="text-left p-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {posts.map(p => (
+                    <tr key={p.id} className="border-t">
+                      <td className="p-2">{p.id}</td>
+                      <td className="p-2">{p.title}</td>
+                      <td className="p-2">{p.content}</td>
+                      <td className="p-2">{p.user.name}</td>
+                      <td className="p-2">{new Date(p.created_at).toLocaleString()}</td>
+                      <td className="p-2">
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          if (confirm('Are you sure you want to delete this post?')) {
+                            deletePost(p.id);
+                          } 
+                        }}>
+                          <button type="submit" className="text-sm px-2 py-1 bg-red-600 text-white rounded">Delete</button>
+
+                        </form>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
