@@ -16,6 +16,7 @@ export default [
         route("verifysuccess", "routes/user/verifysuccess.tsx"),
         route("forgotpassword", "routes/user/forgotpassword.tsx"),
         route("resetpassword", "routes/user/resetpassword.tsx"),
+        route("spendingtracker", "routes/spendingtracker.tsx"),
     
     // Admin routes
     route("admin", "routes/admin.tsx", [

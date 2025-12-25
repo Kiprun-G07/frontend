@@ -27,6 +27,7 @@ export default function Navbar() {
           <Link to="/" className="text-sm">Home</Link>
           <Link to="/events" className="text-sm">Events</Link>
           <Link to="/forum" className="text-sm">Forum</Link>
+          <Link to="/spendingtracker" className="text-sm">Spending Tracker</Link>
           <Link to="/about" className="text-sm">About Us</Link>
           {!loading && !user && (
             <>
