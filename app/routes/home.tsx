@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const { user, loading, setUser } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
+  const [upcomingEvent, setUpcomingEvent] = useState<any>();
 
   useEffect(() => {
     apiFetch('/api/events').then(async (res) => {
@@ -26,11 +27,31 @@ export default function Home() {
     }).catch((err) => {
       console.error('Failed to fetch user profile', err);
     });
+
+    apiFetch('api/upcoming').then(async (res) => {
+      if (res.ok) {
+        const upcomingEvent = await res.json();
+        setUpcomingEvent(upcomingEvent);
+      }
+    }).catch((err) => {
+      console.error('Failed to fetch user profile', err);
+    });
   }, []);
 
   if (user && events.length > 0){
     return (
       <main className="px-15 py-12">
+        <div className="text-3xl font-bold mb-6">
+          <div>
+            Upcoming Events
+
+            {upcomingEvent && (
+              <div className="text-lg font-normal mt-2 text-gray-600">
+                Reminder: You joined {upcomingEvent.event_name} on {dayjs(upcomingEvent.event_date).format('ddd, MMM D, YYYY')}
+              </div>
+            )}
+          </div>
+        </div>
         {/* <section className="max-w-3xl mx-auto">
           
           <div className="mt-8">

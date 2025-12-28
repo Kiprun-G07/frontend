@@ -87,9 +87,34 @@ export default function Event() {
                 <p className="mt-4 text-green-600">You have already joined this event, {user?.name || user?.email}!</p>
             ) : (
             <div>
-                <form className="mt-6" onSubmit={handleSubmit}>
-                    <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:cursor-pointer">Join Event</button>  
-                </form>
+                <div className="flex space-x-4 mt-6">
+                    <form className="" onSubmit={handleSubmit}>
+                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:cursor-pointer">Join Event</button>  
+                    </form>
+                    
+                    {/* tooltip showing that the event link is copied */}
+                    <div className="relative">
+                        <div id="tooltip" className="invisible absolute bg-black text-white text-xs rounded py-1 px-2 bottom-full mb-2">
+                            Event link copied to clipboard!
+                        </div>
+                        <button
+                            onClick={async () => {
+                                await navigator.clipboard.writeText(window.location.href);
+                                const tooltip = document.getElementById('tooltip');
+                                if (tooltip) {
+                                    tooltip.classList.remove('invisible');  
+                                    setTimeout(() => {
+                                        tooltip.classList.add('invisible');
+                                    }, 2000);
+                                }
+                            }}
+                            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:cursor-pointer"
+                        >
+                            Share
+                        </button>
+                    </div>
+                </div>
+                
 
                 {showJoinMessage && (
                     <p className="mt-4 text-green-600">You have successfully joined the event, {user?.name || user?.email}!</p>
