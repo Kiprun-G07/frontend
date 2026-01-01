@@ -80,8 +80,10 @@ export default function Events() {
 
                         <div className="font-medium text-gray-600">{event.event_description}</div>
 
-                        <div className="w-full h-50 bg-amber-100 my-6">
-
+                        <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
                         </div>
 
                         <div className="font-medium">6 hours</div>

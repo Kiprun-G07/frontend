@@ -102,17 +102,58 @@ export default function Home() {
         </div>
       </main>
     );
-  } else {
+  } else if (!user && events.length > 0){ 
     return (
-      <main className="px-15 py-12">
-        <section className="max-w-3xl mx-auto">
-          <Welcome />
-          <div className="mt-8">
-            <Link to="/login" className="inline-block bg-blue-600 text-white px-4 py-2 rounded">
-              Sign in
-            </Link>
+      <main className="px-15 ">
+        <Welcome />
+        <div className="text-3xl font-bold mb-6 mt-12 flex flex-row justify-between">
+          <div>
+            Upcoming Events
           </div>
-        </section>
+          <Link to="/register" className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded">Sign Up</Link>
+        </div>
+        <div className="main-content flex flex-row items-top gap-5 justify-center pb-12">
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[0].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[0].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[0].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <Link to={`/event/${events[0].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
+          </div>
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[1].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[1].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[1].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <Link to={`/event/${events[1].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
+          </div>
+          <div className="content-card h-full  flex-1 flex-grow">
+            <div className="mb-2 text-sm font-medium uppercase text-gray-600">COMING SOON</div>
+            <div className="text-xl font-medium">{events[2].event_name}</div>
+            <div className="font-medium text-gray-600 mb-6">{dayjs(events[2].event_date).format('ddd, MMM D, YYYY')}</div>
+
+            <div className="font-medium text-gray-600">{events[2].event_description}</div>
+
+            <div className="w-full h-50 bg-amber-100 my-6">
+
+            </div>
+
+            <Link to={`/event/${events[2].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
+          </div>
+
+        </div>
       </main>
     );
   }

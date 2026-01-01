@@ -20,24 +20,28 @@ export default function newEvent() {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        
+
+        const form = e.target as any;
+        const file = form.event_image.files[0];
+
+        const formData = new FormData();
+        formData.append('event_name', form.event_name.value);
+        formData.append('event_date', form.event_date.value);
+        formData.append('event_description', form.event_description.value);
+        formData.append('event_location', form.event_location.value);
+        formData.append('event_image', file);
+
         apiFetch('/api/events/create', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                event_name: (e.target as any).event_name.value,
-                event_date: (e.target as any).event_date.value,
-                event_description: (e.target as any).event_description.value,
-                event_location: (e.target as any).event_location.value,
-            }),
+            body: formData, // ✅ THIS IS CORRECT
         })
         .then(res => {
             if (!res.ok) throw new Error('Failed to create event');
-            // alert('Event created successfully');
             navigate('/admin/events');
         })
         .catch(err => alert(err.message));
     }
+
     return (<div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Create New Event</h1>
       <form onSubmit={handleSubmit}>
@@ -75,6 +79,16 @@ export default function newEvent() {
                 type="text"
                 className="w-full border border-gray-300 px-3 py-2 rounded"
             />  
+        </div>
+        {/* add image file selector */}
+        <div className="mb-3">
+            <label htmlFor="event_image" className="block mb-1">Event Image</label>
+            <input
+                id="event_image"
+                name="event_image"
+                type="file"
+                className="w-full border border-gray-300 px-3 py-2 rounded"
+            />
         </div>
         <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Create Event</button>
         </form>
