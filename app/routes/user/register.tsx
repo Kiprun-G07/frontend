@@ -53,7 +53,7 @@ export default function Register() {
       // Remove password confirmation before sending
       const { password_confirmation, ...dataToSend } = formData;
       
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/register` || "https://gpsapi-production.up.railway.app/api/register", {
+      const res = await fetch("https://gpsapi-production.up.railway.app/api/register", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function Register() {
 
       // Optionally get token from response if your API returns it
       const data = await res.json().then(async (data) => {
-        const verify = await fetch(`${import.meta.env.VITE_API_BASE}/api/email/verify/request` || "https://gpsapi-production.up.railway.app/api/email/verify/request", {
+        const verify = await fetch("https://gpsapi-production.up.railway.app/api/email/verify/request", {
           method: "POST",
           headers: { 
               "Content-Type": "application/json",
