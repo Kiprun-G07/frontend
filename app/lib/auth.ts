@@ -7,7 +7,7 @@
 // Replace URLs and response handling to match your backend as needed.
 
 // Normalize API base to the host root (no trailing slash). Keep the `/api` prefix in request paths
-const API_BASE_RAW = "http://gpsapi-production.up.railway.app";
+const API_BASE_RAW = "https://gpsapi-production.up.railway.app";
 const API_BASE = API_BASE_RAW.replace(/\/+$/g, "");
 
 export async function login(email: string, password: string, type?: string): Promise<{
