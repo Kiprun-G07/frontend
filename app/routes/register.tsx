@@ -53,7 +53,7 @@ export default function Register() {
       // Remove password confirmation before sending
       const { password_confirmation, ...dataToSend } = formData;
       
-      const res = await fetch(`${import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000/api'}/register`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/register`, {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",

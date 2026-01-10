@@ -7,7 +7,7 @@
 // Replace URLs and response handling to match your backend as needed.
 
 // Normalize API base to the host root (no trailing slash). Keep the `/api` prefix in request paths
-const API_BASE_RAW = (import.meta.env.VITE_API_BASE as string) || "http://127.0.0.1:8000";
+const API_BASE_RAW = (import.meta.env.VITE_API_BASE as string);
 const API_BASE = API_BASE_RAW.replace(/\/+$/g, "");
 
 export async function login(email: string, password: string, type?: string): Promise<{
