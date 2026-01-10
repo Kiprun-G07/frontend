@@ -38,7 +38,7 @@ export default function Home() {
     });
   }, []);
 
-  if (user && events.length > 0){
+  if (user && events && events.length > 0){
     return (
       <main className="px-15 py-12">
         <div className="text-3xl font-bold mb-6">
@@ -47,7 +47,7 @@ export default function Home() {
 
             {upcomingEvent && (
               <div className="text-lg font-normal mt-2 text-gray-600">
-                Reminder: You joined {upcomingEvent.event_name} on {dayjs(upcomingEvent.event_date).format('ddd, MMM D, YYYY')}
+                Reminder: You joined {upcomingEvent.event_name && upcomingEvent.event_name} on {dayjs(upcomingEvent.event_date && upcomingEvent.event_date).format('ddd, MMM D, YYYY')}
               </div>
             )}
           </div>
