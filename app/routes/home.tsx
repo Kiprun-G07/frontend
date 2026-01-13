@@ -66,9 +66,11 @@ export default function Home() {
 
             <div className="font-medium text-gray-600">{events[0].event_description}</div>
 
-            <div className="w-full h-50 bg-amber-100 my-6">
-
-            </div>
+            <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
+                        </div>
 
             <Link to={`/event/${events[0].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
@@ -79,9 +81,11 @@ export default function Home() {
 
             <div className="font-medium text-gray-600">{events[1].event_description}</div>
 
-            <div className="w-full h-50 bg-amber-100 my-6">
-
-            </div>
+            <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
+                        </div>
 
             <Link to={`/event/${events[1].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
@@ -92,9 +96,11 @@ export default function Home() {
 
             <div className="font-medium text-gray-600">{events[2].event_description}</div>
 
-            <div className="w-full h-50 bg-amber-100 my-6">
-
-            </div>
+            <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
+                        </div>
 
             <Link to={`/event/${events[2].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
@@ -120,9 +126,11 @@ export default function Home() {
 
             <div className="font-medium text-gray-600">{events[0].event_description}</div>
 
-            <div className="w-full h-50 bg-amber-100 my-6">
-
-            </div>
+            <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
+                        </div>
 
             <Link to={`/event/${events[0].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
@@ -146,9 +154,11 @@ export default function Home() {
 
             <div className="font-medium text-gray-600">{events[2].event_description}</div>
 
-            <div className="w-full h-50 bg-amber-100 my-6">
-
-            </div>
+            <div className="w-full min-h-50 bg-amber-100 my-6">
+                          {event.event_image_url && (
+                            <img src={event.event_image_url} alt={event.event_name} className="w-full h-full object-cover" />
+                          )}
+                        </div>
 
             <Link to={`/event/${events[2].id}`} className="font-medium p-2 bg-blue-600 text-white rounded">Join</Link>
           </div>
